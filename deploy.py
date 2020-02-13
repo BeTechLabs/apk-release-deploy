@@ -78,7 +78,11 @@ def upload_to_dropbox(target_file_name, source_file, dropbox_token, dropbox_fold
     headers = {'Authorization': 'Bearer ' + dropbox_token,
             'Content-Type': 'application/json'}
     
-    requests.post(DROPBOX_DELETE_URL, data=json.dumps(DROPBOX_DELETE_DATA), headers=headers)
+    r1 = requests.post(DROPBOX_DELETE_URL, data=json.dumps(DROPBOX_DELETE_DATA), headers=headers)
+
+ 	if r1.status_code != requests.codes.ok:	
+        print("Failed: delete file to Dropbox: {errcode}".format(errcode=r.text))
+        return None
 
     headers = {'Authorization': 'Bearer ' + dropbox_token,
                'Dropbox-API-Arg': json.dumps(DROPBOX_UPLOAD_ARGS),
@@ -87,7 +91,7 @@ def upload_to_dropbox(target_file_name, source_file, dropbox_token, dropbox_fold
     # Upload the file
     r = requests.post(DROPBOX_UPLOAD_URL, data=open(source_file, 'rb'), headers=headers)
 
-    if r.status_code != requests.codes.ok:
+    if r.status_code != requests.codes.ok:	
         print("Failed: upload file to Dropbox: {errcode}".format(errcode=r.text))
         return None
 
