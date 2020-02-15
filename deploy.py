@@ -129,6 +129,8 @@ def send_email(zapier_hook, to, subject, body):
     headers = {'Content-Type': 'application/json'}
 
     r = requests.post(zapier_hook, data=json.dumps(ZAPIER_SEND_DATA), headers=headers)
+    print("File Url {errcode}".format(errcode=r.json))
+    print("File Url {errcode}".format(errcode=r.text))
 
     return r.status_code == requests.codes.ok
 
@@ -263,6 +265,7 @@ if __name__ == '__main__':
     # Extract app version and file
     app_version, app_file = get_app(options.release_dir)
     if app_version == None or app_file == None:
+        print("File Url {errcode}".format(errcode=app_file))
         exit(OUTPUT_FILE_PARSING_ERROR)
     
     target_app_file = get_target_file_name(options.app_name, app_version)
@@ -270,6 +273,7 @@ if __name__ == '__main__':
     # Upload app file and get shared url
     file_url = upload_to_dropbox(target_app_file, app_file, options.dropbox_token, options.dropbox_folder)
     if file_url == None:
+    	print("File Url {errcode}".format(errcode=file_url))
         exit(DROPBOX_ERROR_CODE)
     
     # Extract latest changes
